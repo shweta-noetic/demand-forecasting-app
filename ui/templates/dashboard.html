@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <title>Customer × Item Demand Forecast</title> -->
+       <!-- <title>Customer × Item Demand Forecast</title> -->
+    <title>Customer × Item Demand Forecast</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        h2 {
+            margin-bottom: 5px;
+        }
+        .section {
+            margin-top: 30px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Customer × Item Demand Forecast</h2>
+
+<form method="get">
+    <label>Customer:</label>
+    <select name="customer" onchange="this.form.submit()">
+        <option value="">Select</option>
+        {% for c in customers %}
+            <option value="{{c}}" {% if c == selected_customer %}selected{% endif %}>
+                {{ c }}
+            </option>
+        {% endfor %}
+    </select>
+
+    {% if items %}
+    <label>Item:</label>
+    <select name="item" onchange="this.form.submit()">
+        <option value="">Select</option>
+        {% for i in items %}
+            <option value="{{i}}" {% if i == selected_item %}selected{% endif %}>
+                {{ i }}
+            </option>
+        {% endfor %}
+    </select>
+    {% endif %}
+</form>
+
+<!-- {% if summary is not none and not summary.empty %}
+<h3>Forecast Summary</h3>
+<p>Demand Segment: {{ summary.iloc[0].DemandSegment }}</p>
+<p>Forecast Qty (Next Month): {{ summary.iloc[0].ForecastQty_NextMonth }}</p>
+{% endif %} -->
+
+{% if summary is not none and not summary.empty %}
+<div class="section">
+    <h3>📊 Forecast Summary</h3>
+
+    <div class="card-row">
+        <div class="card">
+            <div class="card-title">Demand Segment</div>
+            <div class="card-value">{{ summary.iloc[0].DemandSegment }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Planning Status</div>
+            <div class="card-value">{{ summary.iloc[0].PlanningStatus }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Forecast Policy</div>
+            <div class="card-value">{{ summary.iloc[0].ForecastPolicy }}</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+        <div class="card-title">Forecast Quantity (Next Month)</div>
+        <div class="card-value">
+            {{ summary.iloc[0].ForecastQty_NextMonth or "No Forecast" }}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% if chart_file %}
+<img src="{{ url_for('static', filename=chart_file) }}">
+{% endif %}
+
+<!-- {% if history is not none %}
+<p>
+<a href="/download?customer={{selected_customer}}&item={{selected_item}}">
+Download Monthly History (CSV)
+</a>
+</p>
+{% endif %} -->
+
+{% if history is not none and not history.empty %}
+<h3>Monthly Demand Table</h3>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+        <tr>
+            {% for col in history.columns %}
+            <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for _, row in history.iterrows() %}
+        <tr>
+            {% for col in history.columns %}
+            <td>{{ row[col] }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+
+</body>
+</html>
+
