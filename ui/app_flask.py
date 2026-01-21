@@ -6,14 +6,17 @@ from pandas.tseries.offsets import MonthEnd
 
 app = Flask(__name__)
 
-
 # PATHS (matches your project)
 
 app = Flask(__name__)
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-OUTPUT_DIR = BASE_DIR / "outputs"
-STATIC_DIR = Path(__file__).resolve().parent / "static" / "charts"
+# BASE_DIR = Path(__file__).resolve().parent.parent
+# OUTPUT_DIR = BASE_DIR / "outputs"
+# STATIC_DIR = Path(__file__).resolve().parent / "static" / "charts"
+
+BASE_DIR = Path(__file__).resolve().parent
+OUTPUT_DIR = BASE_DIR.parent / "outputs"
+STATIC_DIR = BASE_DIR / "static" / "charts"
 
 # BASE_DIR = Path(__file__).resolve().parent.parent
 # OUTPUT_DIR = BASE_DIR / "outputs"
